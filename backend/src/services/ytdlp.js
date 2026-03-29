@@ -91,22 +91,32 @@ async function execYtDlp(args) {
  * @returns {Promise<Object>} Playlist metadata and video list
  */
 export async function getPlaylistInfo(url) {
+    const isSingleVideo = url.includes('/watch') || url.includes('youtu.be/');
+    
     const args = [
         '--flat-playlist',      // Don't download, just get info
         '--dump-json',          // Output as JSON
         '--no-warnings',
         '--ignore-errors',      // Skip unavailable videos
-        url
     ];
+
+    if (isSingleVideo) {
+        args.push('--no-playlist');
+    }
+
+    args.push(url);
 
     const videos = await execYtDlp(args);
     const videoList = Array.isArray(videos) ? videos : [videos];
 
     // Extract playlist info from first video entry
-    const playlistTitle = videoList[0]?.playlist_title || 'Playlist';
+    const playlistTitle = isSingleVideo ? 
+        (videoList[0]?.title || 'Single Video') : 
+        (videoList[0]?.playlist_title || 'Playlist');
 
     return {
         title: playlistTitle,
+        isSingleVideo,
         videoCount: videoList.length,
         videos: videoList.map(video => ({
             id: video.id,

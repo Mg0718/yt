@@ -117,6 +117,25 @@ RATE_LIMIT_WINDOW_MS=60000
 RATE_LIMIT_MAX_REQUESTS=30
 ```
 
+## Building Android APK
+
+The project is configured with Capacitor to generate an Android app from the frontend.
+
+### Prerequisites
+- Android Studio installed
+- Capacitor CLI (`npm install -g @capacitor/cli`)
+
+### Build Steps
+
+```bash
+cd frontend
+npm run build
+npm run android:sync
+npm run android:open
+```
+
+This will open Android Studio. From there, you can build the APK via **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
+
 ## Tech Stack
 
 **Frontend:**

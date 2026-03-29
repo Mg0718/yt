@@ -3,12 +3,15 @@
  * Validates URLs and user input for security
  */
 
-// Supported platforms - YouTube playlists only for now
+// Supported platforms - YouTube playlists and single videos
 const SUPPORTED_PATTERNS = [
     // YouTube playlist URLs
     /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/.*[?&]list=[a-zA-Z0-9_-]+/,
     // YouTube channel/playlist pages
-    /^https?:\/\/(www\.)?youtube\.com\/(playlist|channel|c|user|@)/
+    /^https?:\/\/(www\.)?youtube\.com\/(playlist|channel|c|user|@)/,
+    // YouTube single video URLs
+    /^https?:\/\/(www\.)?youtube\.com\/watch\?v=[a-zA-Z0-9_-]+/,
+    /^https?:\/\/(www\.)?youtu\.be\/[a-zA-Z0-9_-]+/
 ];
 
 /**

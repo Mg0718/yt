@@ -21,6 +21,10 @@ export function PlaylistInput({ onPlaylistLoaded, isLoading, setIsLoading, setEr
 
         try {
             const response = await fetch(`/api/playlist?url=${encodeURIComponent(url.trim())}`);
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Could not connect to the backend server. Please make sure the backend is running.');
+            }
             const data = await response.json();
 
             if (!response.ok) {
@@ -38,9 +42,9 @@ export function PlaylistInput({ onPlaylistLoaded, isLoading, setIsLoading, setEr
     return (
         <div className="playlist-input card animate-fadeIn">
             <div className="input-header">
-                <h2>Enter Playlist URL</h2>
+                <h2>Enter Video or Playlist URL</h2>
                 <p className="text-secondary">
-                    Paste a public YouTube playlist link to get started
+                    Paste a public YouTube video or playlist link to get started
                 </p>
             </div>
 
@@ -49,7 +53,7 @@ export function PlaylistInput({ onPlaylistLoaded, isLoading, setIsLoading, setEr
                     <input
                         type="url"
                         className="input"
-                        placeholder="https://www.youtube.com/playlist?list=..."
+                        placeholder="https://www.youtube.com/watch?v=... or playlist?list=..."
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
                         disabled={isLoading}
@@ -77,7 +81,7 @@ export function PlaylistInput({ onPlaylistLoaded, isLoading, setIsLoading, setEr
             <div className="supported-note">
                 <span className="note-icon">ℹ️</span>
                 <span className="text-muted">
-                    Supports YouTube playlists only. Educational and personal use only.
+                    Supports YouTube videos and playlists. Educational and personal use only.
                 </span>
             </div>
 

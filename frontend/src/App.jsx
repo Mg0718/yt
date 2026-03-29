@@ -124,7 +124,7 @@ function App() {
                     <div className="header-content">
                         <div className="logo">
                             <div className="logo-icon">📥</div>
-                            <span className="logo-text">Playlist Downloader</span>
+                            <span className="logo-text">Video & Playlist Downloader</span>
                         </div>
                         <span className="badge-edu">Educational Use Only</span>
                     </div>
@@ -179,9 +179,14 @@ function App() {
                                             className="btn"
                                             onClick={handleNewPlaylist}
                                         >
-                                            ← Change Playlist
+                                            ← {playlist.isSingleVideo ? 'Change Video' : 'Change Playlist'}
                                         </button>
-                                        <h2 className="playlist-title">{playlist.title}</h2>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                                            <h2 className="playlist-title" style={{ flex: 'none', margin: 0 }}>{playlist.title}</h2>
+                                            {playlist.isSingleVideo && (
+                                                <span className="badge" style={{ backgroundColor: 'var(--primary-color)', color: 'white' }}>Video Download</span>
+                                            )}
+                                        </div>
                                     </div>
                                 )}
 
@@ -224,10 +229,10 @@ function App() {
                     {!playlist && !isParsingPlaylist && !parseError && (
                         <div className="empty-state card">
                             <div className="empty-icon">🎬</div>
-                            <h3 className="empty-title">No Playlist Loaded</h3>
+                            <h3 className="empty-title">No Media Loaded</h3>
                             <p className="empty-description">
-                                Enter a YouTube playlist URL above to get started.
-                                You can select videos, choose quality, and download them all as a ZIP file.
+                                Enter a YouTube video or playlist URL above to get started.
+                                You can choose the quality and download your content.
                             </p>
                         </div>
                     )}
