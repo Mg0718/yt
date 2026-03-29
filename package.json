@@ -1,0 +1,62 @@
+{
+  "name": "yt-downloader-app",
+  "productName": "YT Downloader",
+  "version": "1.0.0",
+  "description": "Video playlist downloader application",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "concurrently -k \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:electron\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:electron": "wait-on http://localhost:5173 && electron .",
+    "postinstall": "cd backend && npm install && cd ../frontend && npm install",
+    "build:frontend": "cd frontend && npm run build",
+    "build:distribution": "node scripts/build-distribution.js",
+    "dist": "npm run build:distribution && electron-builder build --mac",
+    "pack": "npm run build:distribution && electron-builder build --mac --dir"
+  },
+  "build": {
+    "appId": "com.moses.ytdownloader",
+    "asar": false,
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg"
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "backend/**/*",
+      "!backend/node_modules/.bin",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/*.d.ts",
+      "!**/node_modules/.bin",
+      "!frontend/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/yt-dlp",
+        "to": "yt-dlp"
+      }
+    ]
+  },
+  "keywords": [],
+  "author": "Moses",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1",
+    "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "portfinder": "^1.0.32"
+  }
+}
