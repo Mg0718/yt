@@ -5,45 +5,62 @@
 
 // Supported platforms - YouTube playlists and single videos
 const SUPPORTED_PATTERNS = [
-    // YouTube playlist URLs
+    // YouTube playlist URLs (with or without www, http or https)
     /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/.*[?&]list=[a-zA-Z0-9_-]+/,
     // YouTube channel/playlist pages
     /^https?:\/\/(www\.)?youtube\.com\/(playlist|channel|c|user|@)/,
-    // YouTube single video URLs
-    /^https?:\/\/(www\.)?youtube\.com\/watch\?v=[a-zA-Z0-9_-]+/,
-    /^https?:\/\/(www\.)?youtu\.be\/[a-zA-Z0-9_-]+/
+    // YouTube single video URLs (watch?v=ID, possibly with extra params)
+    /^https?:\/\/(www\.)?youtube\.com\/watch\?.*v=[a-zA-Z0-9_-]{11}/,
+    // Short URL youtu.be/ID
+    /^https?:\/\/(www\.)?youtu\.be\/[a-zA-Z0-9_-]+/,
+    // YouTube Shorts
+    /^https?:\/\/(www\.)?youtube\.com\/shorts\/[a-zA-Z0-9_-]+/
 ];
 
 /**
- * Validates a playlist URL
+ * Normalizes a YouTube URL by adding https:// if missing
+ * @param {string} url - Raw URL string
+ * @returns {string} Normalized URL
+ */
+export function normalizeUrl(url) {
+    let trimmed = url.trim();
+    // Add https:// if user pasted without protocol
+    if (/^(www\.)?youtu(\.be|be\.com)/i.test(trimmed)) {
+        trimmed = 'https://' + trimmed;
+    }
+    return trimmed;
+}
+
+/**
+ * Validates a video or playlist URL
  * @param {string} url - URL to validate
- * @returns {{ valid: boolean, error?: string }}
+ * @returns {{ valid: boolean, error?: string, normalizedUrl?: string }}
  */
 export function validatePlaylistUrl(url) {
     if (!url || typeof url !== 'string') {
         return { valid: false, error: 'URL is required' };
     }
 
-    const trimmedUrl = url.trim();
+    const normalizedUrl = normalizeUrl(url);
 
     // Basic URL format check
     try {
-        new URL(trimmedUrl);
+        new URL(normalizedUrl);
     } catch {
-        return { valid: false, error: 'Invalid URL format' };
+        return { valid: false, error: 'Invalid URL format. Please paste a valid YouTube link.' };
     }
 
     // Check if URL matches supported patterns
-    const isSupported = SUPPORTED_PATTERNS.some(pattern => pattern.test(trimmedUrl));
+    const isSupported = SUPPORTED_PATTERNS.some(pattern => pattern.test(normalizedUrl));
 
     if (!isSupported) {
         return {
             valid: false,
-            error: 'Unsupported URL. Please provide a valid YouTube playlist URL.'
+            error: 'Unsupported URL. Please provide a valid YouTube video or playlist URL.'
         };
     }
 
-    return { valid: true };
+    return { valid: true, normalizedUrl };
 }
 
 /**

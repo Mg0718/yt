@@ -26,10 +26,11 @@ router.get('/', async (req, res, next) => {
             });
         }
 
-        console.log(`Parsing playlist: ${url}`);
+        const normalizedUrl = validation.normalizedUrl || url;
+        console.log(`Parsing: ${normalizedUrl}`);
 
         // Fetch playlist info
-        const playlistInfo = await getPlaylistInfo(url);
+        const playlistInfo = await getPlaylistInfo(normalizedUrl);
 
         res.json({
             success: true,

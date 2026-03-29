@@ -12,7 +12,7 @@ export function PlaylistInput({ onPlaylistLoaded, isLoading, setIsLoading, setEr
         e.preventDefault();
 
         if (!url.trim()) {
-            setError('Please enter a playlist URL');
+            setError('Please enter a video or playlist URL');
             return;
         }
 
@@ -51,7 +51,7 @@ export function PlaylistInput({ onPlaylistLoaded, isLoading, setIsLoading, setEr
             <form onSubmit={handleSubmit} className="input-form">
                 <div className="input-group">
                     <input
-                        type="url"
+                        type="text"
                         className="input"
                         placeholder="https://www.youtube.com/watch?v=... or playlist?list=..."
                         value={url}
